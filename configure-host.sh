@@ -59,7 +59,7 @@ if [ ! -z "$desiredIP" ]; then
         netplan apply
         log_change "IP address changed to $desiredIP"
     elif [ $verbose -eq 1 ]; then
-        echo "IP address is already $desiredIP"
+        echo "$desiredIPAddress $desiredName" | sudo tee -a /etc/hosts > /dev/null
     fi
 fi
 
@@ -71,4 +71,8 @@ if [ ! -z "$hostName" ] && [ ! -z "$hostIP" ]; then
     elif [ $verbose -eq 1 ]; then
         echo "Entry $hostName $hostIP already exists in /etc/hosts"
     fi
+fi
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root. Please use sudo."
+    exit 1
 fi
